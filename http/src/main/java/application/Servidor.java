@@ -1,15 +1,14 @@
-package http;
+package application;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 import http.header.Header;
+import http.request.Request;
 
 public class Servidor {
 
@@ -18,16 +17,27 @@ public class Servidor {
 		try {
 			ServerSocket server = new ServerSocket(80);
 			while(true) {
+				
+				
 				Socket socket= server.accept();
 				
-				PrintWriter printWriter= new PrintWriter(socket.getOutputStream());
 
 				
-		//		InputStream dados= socket.getInputStream();
+			//	InputStream dados= socket.getInputStream();
 				
-		//		BufferedReader reader = new BufferedReader(new InputStreamReader(dados));
+			//	BufferedReader reader = new BufferedReader(new InputStreamReader(dados));
 				
-		//	    reader.lines().forEach(e->exibirLnha(e));
+			   Thread teste= new Thread(new Request(socket),"request");
+			   
+			   
+			   
+			   teste.start();
+			    
+			   			    
+			    
+
+		/*	    PrintWriter printWriter= new PrintWriter(socket.getOutputStream());
+
 			    
 			    Header header = new Header();
 			    
@@ -36,13 +46,10 @@ public class Servidor {
 			    
 			    printWriter.print(resposta);
 			    
-			    printWriter.close();
+			    printWriter.close(); */
 			    
 			    
-		
-			    
-
-				
+						
 				
 				
 			}
@@ -52,9 +59,6 @@ public class Servidor {
 		}
 	}
 	
-	private static void exibirLnha(String linha) {
 	
-		System.out.println(linha);
-	}
 
 }
