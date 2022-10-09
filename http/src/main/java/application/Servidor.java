@@ -7,8 +7,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 
+import http.Request;
 import http.header.Header;
-import http.request.Request;
 
 public class Servidor {
 

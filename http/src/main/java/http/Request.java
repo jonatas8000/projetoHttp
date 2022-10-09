@@ -1,4 +1,4 @@
-package http.request;
+package http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,12 +11,14 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import http.header.Header;
+import http.header.HeaderFactory;
+import http.header.Metodo;
 
 public class Request implements Runnable {
 
 	private List<String> linhasRequest = new ArrayList<>();
 
-	private String metodoHttp;
+	private Header header;
 
 	private Socket socket;
 
@@ -26,10 +28,13 @@ public class Request implements Runnable {
 		
 		String linha;
 		int count=1;
-		while((linha = scanner.nextLine())!=null&&count<3) {
+		while(count!=16&&(linha = scanner.nextLine())!=null) {
+			System.out.println(count);
 			linhasRequest.add(linha);
 			count++;
 		}
+		
+		
 
 	}
 
@@ -40,23 +45,22 @@ public class Request implements Runnable {
 	@Override
 	public void run() {
 		
-			this.carregarMetodo();
+			this.carregarHeader();
 			this.response();
 
 
 	}
 
-	private void carregarMetodo() {
-		metodoHttp = linhasRequest.get(0);
-		System.out.println(metodoHttp);
-
+	private void carregarHeader() {
+	   header=  HeaderFactory.criarHeader(linhasRequest);
+	
 	}
 
 	private void response() {
 		PrintWriter printWriter;
 		try {
 			printWriter = new PrintWriter(socket.getOutputStream());
-			Header header = new Header();
+			Header header = new Header(new ArrayList());
 
 			String resposta = header.response();
 

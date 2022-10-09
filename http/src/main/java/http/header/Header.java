@@ -1,7 +1,32 @@
 package http.header;
 
+import java.util.List;
+
 public class Header {
 	
+
+	private List<String> requestHeader;
+	private Metodo metodo;
+	
+	
+	public Header(List<String> requestHeader) {
+		super();
+		this.requestHeader = requestHeader;
+	}
+	
+	
+
+	public Metodo getMetodo() {
+		return metodo;
+	}
+
+
+
+	public void setMetodo(Metodo metodo) {
+		this.metodo = metodo;
+	}
+
+
 
 	public String response() {
 		return   "HTTP/1.1 200 OK\r\n" 
@@ -17,6 +42,10 @@ public class Header {
 				+"<h1>Olá, mundo</h1>"
 				+"</body></html>";
 				
+	}
+	
+	public void carregarMetodo() {
+		metodo= Metodo.valueOf(requestHeader.get(0).split("/")[0].trim());
 	}
 	
 
