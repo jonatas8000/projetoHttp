@@ -1,6 +1,6 @@
-package DTO;
+package domain.model;
 
-public class PessoaDTO {
+public class Pessoa {
 
 	private Long id;
 	
@@ -8,7 +8,7 @@ public class PessoaDTO {
 	
 	
 
-	public PessoaDTO(Long id, String nome) {
+	public Pessoa(Long id, String nome) {
 		this.id = id;
 		this.nome = nome;
 	}
@@ -28,10 +28,9 @@ public class PessoaDTO {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
 	
-	public String toJson() {
-		return "{ id: "+this.id+",nome: "+this.nome+"}";
-		   
-	}
+	
+	
 	
 }

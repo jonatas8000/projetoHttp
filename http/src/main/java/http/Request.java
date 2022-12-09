@@ -1,68 +1,99 @@
 package http;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 import http.header.Header;
 import http.header.HeaderFactory;
-import http.header.Metodo;
 
 public class Request implements Runnable {
-
-	private List<String> linhasRequest = new ArrayList<>();
 
 	private Header header;
 
 	private Socket socket;
+	
+	private RoteadorUrl roteadorUrl;
 
-	public Request(Socket socket) throws IOException {
-		this.socket=socket;
-		Scanner scanner = new Scanner (socket.getInputStream());
-		
-		String linha;
-		int count=1;
-		while(count!=16&&(linha = scanner.nextLine())!=null) {
-			System.out.println(count);
-			linhasRequest.add(linha);
-			count++;
-		}
-		
-		
+	public Request(Socket socket)  {
+		this.socket=socket;	
+		this.roteadorUrl=new RoteadorUrl();
 
 	}
 
-	public List<String> getLinhasRequest() {
-		return linhasRequest;
-	}
 
 	@Override
 	public void run() {
-		
-			this.carregarHeader();
-			this.response();
+		    List<String> linhasRequest=this.carregarLinhasRequest();
+		    String body=null;
+		    
+		    if(linhasRequest!=null&&!linhasRequest.isEmpty()){
+			this.carregarHeader(linhasRequest);
+		     body=roteadorUrl.executarController(header.getPath(), header.getMetodo());
 
+		    }
+		    
+		    
+			this.response(body);
+		    
 
 	}
+	
+	private List<String> carregarLinhasRequest()  {
+   
+	List<String> linhasRequest = new ArrayList<>();	
+	byte caracteres [] = new byte[2048];
+	
+	try {	
+		
+		  InputStream entrada = socket.getInputStream();
+		  
+		  
+		
+		 int indice=0;
+		while(true) {
+			
+			 caracteres[indice]=(byte) entrada.read();
+			
+			 if(caracteres[0]==-1)
+				break;
+			 
+			if(Header.isFimHeader(caracteres))
+				break;
+			
+			indice++;
+			
+		}
+		}catch(NoSuchElementException | IOException e) {
+			return linhasRequest;
+		}
+	
+	 if(caracteres[0]!=-1)
+	linhasRequest.addAll(Arrays.asList(new String(caracteres).split("\r\n")));
+	 
+	 return linhasRequest;
+	}
 
-	private void carregarHeader() {
+	private void carregarHeader(List<String> linhasRequest) {
 	   header=  HeaderFactory.criarHeader(linhasRequest);
 	
 	}
 
-	private void response() {
+	private void response(String body) {
 		PrintWriter printWriter;
 		try {
 			printWriter = new PrintWriter(socket.getOutputStream());
-			Header header = new Header(new ArrayList());
+			Header header = new Header(new ArrayList<>());
 
 			String resposta = header.response();
+			
+			if(body!=null)
+				resposta=resposta+body;
 
 			printWriter.print(resposta);
 
@@ -73,5 +104,7 @@ public class Request implements Runnable {
 		}
 
 	}
+	
+	
 
 }

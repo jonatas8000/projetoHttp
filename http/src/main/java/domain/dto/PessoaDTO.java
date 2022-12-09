@@ -1,6 +1,6 @@
-package model;
+package domain.dto;
 
-public class Pessoa {
+public class PessoaDTO  {
 
 	private Long id;
 	
@@ -8,7 +8,7 @@ public class Pessoa {
 	
 	
 
-	public Pessoa(Long id, String nome) {
+	public PessoaDTO(Long id, String nome) {
 		this.id = id;
 		this.nome = nome;
 	}

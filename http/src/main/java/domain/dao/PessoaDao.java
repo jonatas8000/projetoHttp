@@ -1,12 +1,13 @@
-package dao;
+package domain.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import model.Pessoa;
+import domain.model.Pessoa;
 
 public class PessoaDao {
 
-	private List<Pessoa> pessoaList;
+	private List<Pessoa> pessoaList = new ArrayList<>();
 	
 	public PessoaDao() {
 		
@@ -16,5 +17,9 @@ public class PessoaDao {
 	
 	public Pessoa buscarPorId(Long id) {
 		return pessoaList.stream().filter(e->e.getId().equals(id)).findFirst().get();
+	}
+	
+	public List<Pessoa> buscarPessoas(){
+		return pessoaList;
 	}
 }
