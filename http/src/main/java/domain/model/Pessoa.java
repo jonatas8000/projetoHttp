@@ -8,6 +8,10 @@ public class Pessoa {
 	
 	
 
+	public Pessoa() {
+		super();
+	}
+
 	public Pessoa(Long id, String nome) {
 		this.id = id;
 		this.nome = nome;

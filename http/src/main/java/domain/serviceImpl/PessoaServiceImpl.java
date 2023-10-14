@@ -28,4 +28,9 @@ public class PessoaServiceImpl implements PessoaService {
 		return  pessoaMapper.toDTO(pessoaDao.buscarPessoas());
 	}
 
+	@Override
+	public void salvar(PessoaDTO pessoaDTO) {
+		pessoaMapper.toEntity(pessoaDTO);
+	}
+
 }

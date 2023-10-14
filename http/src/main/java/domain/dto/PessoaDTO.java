@@ -2,11 +2,15 @@ package domain.dto;
 
 public class PessoaDTO  {
 
-	private Long id;
+	public Long id;
 	
-	private String nome;
+	public String nome;
 	
 	
+
+	public PessoaDTO() {
+		super();
+	}
 
 	public PessoaDTO(Long id, String nome) {
 		this.id = id;

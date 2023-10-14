@@ -3,14 +3,15 @@ package http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import http.header.Header;
 import http.header.HeaderFactory;
+import util.ArrayByte;
 
 public class Request implements Runnable {
 
@@ -19,6 +20,8 @@ public class Request implements Runnable {
 	private Socket socket;
 	
 	private RoteadorUrl roteadorUrl;
+	
+	private String bodyRequest;
 
 	public Request(Socket socket)  {
 		this.socket=socket;	
@@ -29,73 +32,112 @@ public class Request implements Runnable {
 
 	@Override
 	public void run() {
-		    List<String> linhasRequest=this.carregarLinhasRequest();
-		    String body=null;
+		    this.carregarLinhasRequest();
+		    Response response=null;
 		    
-		    if(linhasRequest!=null&&!linhasRequest.isEmpty()){
-			this.carregarHeader(linhasRequest);
-		     body=roteadorUrl.executarController(header.getPath(), header.getMetodo());
+		    if(header!=null){
+		     try {
+		    	 response=roteadorUrl.executarController(header.getPath(), header.getMetodo(),bodyRequest);
+			} catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException
+					| SecurityException | ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		    }
 		    
-		    
-			this.response(body);
+		    if(response!=null)
+			this.response(response);
 		    
 
 	}
 	
-	private List<String> carregarLinhasRequest()  {
+	private void carregarLinhasRequest()  {
    
-	List<String> linhasRequest = new ArrayList<>();	
-	byte caracteres [] = new byte[2048];
+	///byte caracteres [] = new byte[2048];
+	ArrayByte arrayByte = new ArrayByte();	
+	int inicioBody=0;
+	
 	
 	try {	
 		
 		  InputStream entrada = socket.getInputStream();
 		  
 		  
-		
 		 int indice=0;
 		while(true) {
+			boolean fimHeader=false;
 			
-			 caracteres[indice]=(byte) entrada.read();
+		//	caracteres[indice]=(byte) entrada.read();
+			arrayByte.addByte((byte)entrada.read());
 			
-			 if(caracteres[0]==-1)
+			
+			 if(arrayByte.getCaracteres()[0]==-1)
 				break;
 			 
-			if(Header.isFimHeader(caracteres))
-				break;
+			 fimHeader=Header.isFimHeader(arrayByte.getCaracteres());
 			
+			 if(fimHeader) {
+				 this.carregarHeader(Arrays.asList(new String(arrayByte.getCaracteres()).split("\r\n")));
+				 
+				 if(inicioBody==0)
+				 inicioBody=indice;
+				 
+				 if(header.getMetodo().toString().equalsIgnoreCase("GET")||arrayByte.getCaracteres()[indice]==125)
+					 break;
+				 
+			 }
+			 
+			 	 
 			indice++;
 			
 		}
+		
+		if(header!=null&&!header.getMetodo().toString().equalsIgnoreCase("GET"))
+			this.carregarBody(arrayByte.getCaracteres(), inicioBody);
+		
+		 
 		}catch(NoSuchElementException | IOException e) {
-			return linhasRequest;
+			
 		}
 	
-	 if(caracteres[0]!=-1)
-	linhasRequest.addAll(Arrays.asList(new String(caracteres).split("\r\n")));
+	
 	 
-	 return linhasRequest;
+	 
 	}
 
 	private void carregarHeader(List<String> linhasRequest) {
 	   header=  HeaderFactory.criarHeader(linhasRequest);
 	
 	}
+	
+	private void carregarBody(byte caractere[],int inicioBody) {
+		int indice=inicioBody;
+		int indiceBody=0;
+		byte caracteresBody [] = new byte[2048];
+		
+		
+		do {
+			indice++;
+			caracteresBody[indiceBody]=caractere[indice];
+			indiceBody++;
+		}while(caractere[indice]!=125);
+		
+		
+		bodyRequest=new String(caracteresBody);
+		int ultimoCaractere= bodyRequest.lastIndexOf("}");
+		bodyRequest=bodyRequest.substring(0, ultimoCaractere+1);
+		
+	}
+	
 
-	private void response(String body) {
+	private void response(Response response) {
 		PrintWriter printWriter;
 		try {
 			printWriter = new PrintWriter(socket.getOutputStream());
-			Header header = new Header(new ArrayList<>());
-
-			String resposta = header.response();
 			
-			if(body!=null)
-				resposta=resposta+body;
 
-			printWriter.print(resposta);
+			printWriter.print(response.toString());
 
 			printWriter.close();
 		} catch (IOException e) {

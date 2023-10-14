@@ -16,7 +16,7 @@ public class PessoaController {
 	}
 	
 	public void salvarPessoa(PessoaDTO pessoaDTO) {
-		
+		pessoaService.salvar(pessoaDTO);
 	}
 	
 	public List<PessoaDTO> buscarPessoas(){

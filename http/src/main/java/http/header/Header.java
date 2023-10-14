@@ -2,13 +2,20 @@ package http.header;
 
 import java.util.List;
 
+import http.StatusEnum;
+
 public class Header {
 	
 
 	private List<String> requestHeader;
 	private Metodo metodo;
 	private String path;
+	private StatusEnum status;
 	
+	
+	public Header(StatusEnum status) {
+		this.status=status;
+	}
 	
 	public Header(List<String> requestHeader) {
 		super();
@@ -35,7 +42,7 @@ public class Header {
 
 
 	public String response() {
-		return   "HTTP/1.1 200 OK\r\n" 
+		return   "HTTP/1.1 "+status.getDescricao()+"\r\n" 
 				 +"Date: Thu, 13 Jul 2017 02:02:45 GMT\r\n"
 				 +"Last-Modified:Mon, 10 Jul 2017 21:30:06 GMT\r\n"
 				+"Accept-Ranges:  none\r\n"

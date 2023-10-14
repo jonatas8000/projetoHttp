@@ -9,5 +9,7 @@ public interface PessoaService {
 	public PessoaDTO buscarPorId(Long id);
 	
 	public List<PessoaDTO> buscarPessoas();
+	
+	public void salvar(PessoaDTO pessoaDTO);
 		
 }
