@@ -11,5 +11,9 @@ public interface PessoaService {
 	public List<PessoaDTO> buscarPessoas();
 	
 	public void salvar(PessoaDTO pessoaDTO);
+	
+	public void atualizar(PessoaDTO pessoaDTO);
+	
+	public void excluir (Long id);
 		
 }

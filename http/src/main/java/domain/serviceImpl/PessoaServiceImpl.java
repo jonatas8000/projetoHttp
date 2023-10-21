@@ -14,7 +14,7 @@ public class PessoaServiceImpl implements PessoaService {
 	private PessoaMapper pessoaMapper;
 	
 	public PessoaServiceImpl () {
-		this.pessoaDao=new PessoaDao();
+		this.pessoaDao= PessoaDao.getInstance();
 		this.pessoaMapper=new PessoaMapper();
 	}
 	
@@ -30,7 +30,17 @@ public class PessoaServiceImpl implements PessoaService {
 
 	@Override
 	public void salvar(PessoaDTO pessoaDTO) {
-		pessoaMapper.toEntity(pessoaDTO);
+		pessoaDao.salvar(pessoaMapper.toEntity(pessoaDTO));
+	}
+
+	@Override
+	public void atualizar(PessoaDTO pessoaDTO) {
+		pessoaDao.atualizar(pessoaMapper.toEntity(pessoaDTO));	
+	}
+
+	@Override
+	public void excluir(Long id) {
+		pessoaDao.excluir(id);
 	}
 
 }

@@ -19,8 +19,15 @@ public class PessoaController {
 		pessoaService.salvar(pessoaDTO);
 	}
 	
+	public void atualizarPessoa(PessoaDTO pessoaDTO) {
+		pessoaService.atualizar(pessoaDTO);
+	}
+	
 	public List<PessoaDTO> buscarPessoas(){
 		return pessoaService.buscarPessoas();
 	}
 
+	public void excluirPessoa(Long id) {
+		pessoaService.excluir(id);
+	}
 }
