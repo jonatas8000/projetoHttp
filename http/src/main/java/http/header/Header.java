@@ -49,11 +49,7 @@ public class Header {
 				 +"Connection: close\r\n"
 				 +"Content-Type: application/json; charset=UTF-8\r\n"
 				 +"Cookie: test=114&username=João\r\n\r\n";
-			/*	+"<html><head></head><body><header>"
-				+"<title>http://info.cern.ch</title>"
-				+"</header>"
-				+"<h1>Olá, mundo</h1>"
-				+"</body></html>"; */
+		
 				
 	}
 	
@@ -71,9 +67,7 @@ public class Header {
 		
 		int indice=0;
 		while(indice<tamanho) {
-			if(indice+4>=tamanho)
-				break;
-			else if(isFimHeader(linhaBytes, indice)) {
+			if(isFimHeader(linhaBytes, indice)) {
 				  isFimLinha=true;
 				  break;
 			}

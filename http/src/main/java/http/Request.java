@@ -68,7 +68,6 @@ public class Request implements Runnable {
 		while(true) {
 			boolean fimHeader=false;
 			
-		//	caracteres[indice]=(byte) entrada.read();
 			arrayByte.addByte((byte)entrada.read());
 			
 			

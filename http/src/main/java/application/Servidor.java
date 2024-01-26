@@ -9,6 +9,7 @@ import http.Request;
 
 public class Servidor {
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 
 		try {
@@ -25,7 +26,6 @@ public class Servidor {
 				
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
