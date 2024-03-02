@@ -3,6 +3,7 @@ package domain.controller;
 import java.util.List;
 
 import domain.dto.PessoaDTO;
+import domain.exception.PessoaNaoEncontradaException;
 import domain.service.PessoaService;
 import domain.serviceImpl.PessoaServiceImpl;
 
@@ -27,7 +28,7 @@ public class PessoaController {
 		return pessoaService.buscarPessoas();
 	}
 
-	public void excluirPessoa(Long id) {
+	public void excluirPessoa(Long id) throws PessoaNaoEncontradaException {
 		pessoaService.excluir(id);
 	}
 }

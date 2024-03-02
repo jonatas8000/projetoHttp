@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import domain.controller.PessoaController;
 import domain.dto.PessoaDTO;
+import domain.exception.HttpException;
 import http.header.Metodo;
 import util.ConvertToJson;
 
@@ -39,7 +40,12 @@ public class RoteadorUrl {
 			return new Response(StatusEnum.OK, null);	
 		}else if (url.matches("pessoa/\\d")&&Metodo.DELETE.equals(metodo)) {
 			int posicao= url.indexOf("/");
-			pessoaController.excluirPessoa(Long.parseLong(url.substring(posicao+1,url.length())));
+			try {
+				pessoaController.excluirPessoa(Long.parseLong(url.substring(posicao+1,url.length())));
+			} catch (HttpException e) {
+				 
+				return e.gerarErro();
+			}
 			return new Response(StatusEnum.OK, null);	
 		}
 		

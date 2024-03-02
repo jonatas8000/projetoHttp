@@ -2,6 +2,7 @@ package domain.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import domain.model.Pessoa;
 
@@ -16,8 +17,8 @@ public class PessoaDao {
 	}
 	
 	
-	public Pessoa buscarPorId(Long id) {
-		return pessoaList.stream().filter(e->e.getId().equals(id)).findFirst().get();
+	public Optional<Pessoa> buscarPorId(Long id) {
+		return pessoaList.stream().filter(e->e.getId().equals(id)).findFirst();
 	}
 	
 	public List<Pessoa> buscarPessoas(){
