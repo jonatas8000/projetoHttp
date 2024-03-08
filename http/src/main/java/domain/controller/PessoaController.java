@@ -31,4 +31,8 @@ public class PessoaController {
 	public void excluirPessoa(Long id) throws PessoaNaoEncontradaException {
 		pessoaService.excluir(id);
 	}
+	
+	public PessoaDTO buscarPorId(Long id)throws PessoaNaoEncontradaException{
+		return pessoaService.buscarPorId(id);
+	}
 }

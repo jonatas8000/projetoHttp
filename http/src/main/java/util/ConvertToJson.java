@@ -94,7 +94,7 @@ public static String execute(Object obj) {
 	}
 
 	  if(tipo.equalsIgnoreCase("java.lang.Long"))
-		  field.set(obj, Long.parseLong(valor));
+		  field.set(obj, Long.parseLong(valor.trim()));
 	  else
 		field.set(obj, valor);
 	  

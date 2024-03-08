@@ -19,7 +19,18 @@ public class RoteadorUrl {
 	
 	
 	public Response executarController(String url,Metodo metodo,String body) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
-		if(url.equals("pessoa")&&Metodo.GET.equals(metodo)) {
+		if(url.matches("pessoa/\\d")&&Metodo.GET.equals(metodo)) {
+			int posicao= url.indexOf("/");
+			String json;
+			try {
+				json=ConvertToJson.execute(pessoaController.buscarPorId(Long.parseLong(url.substring(posicao+1,url.length()))));
+			} catch (HttpException e) {
+				 
+				return e.gerarErro();
+			}
+			return new Response(StatusEnum.OK, json);	
+		
+		}else if(url.equals("pessoa")&&Metodo.GET.equals(metodo)) {
 			if(pessoaController.buscarPessoas() instanceof Collection) {
 				String json="{\"pessoa\":[";
 				for(Object o : pessoaController.buscarPessoas()) {
@@ -29,8 +40,6 @@ public class RoteadorUrl {
 				json=json+"]}";
 				return new Response(StatusEnum.OK, json);
 			}
-			
-			return null;
 				
 		}else if(url.equals("pessoa")&&Metodo.POST.equals(metodo)) {
 			pessoaController.salvarPessoa((PessoaDTO) ConvertToJson.convertToObject(new PessoaDTO(), body));
